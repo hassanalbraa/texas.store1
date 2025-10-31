@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=1024"> 
-<title>TEXAS STORE — متجر شحن الألعاب</title>
+<title>COVID STORE — متجر شحن الألعاب</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 body {
@@ -72,6 +72,8 @@ h2,h3 {font-size:1.6rem;}
   border:1px solid rgba(255,255,255,0.02);
   text-align:right;
 }
+input {padding:8px; border-radius:8px; border:none; width:100%; margin-top:4px;}
+label {font-size:1rem;}
 @keyframes fadeIn{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}
 </style>
 </head>
@@ -80,7 +82,7 @@ h2,h3 {font-size:1.6rem;}
 
   <!-- Step 1: Choose Game + Offers -->
   <div class="step active" id="step1">
-    <h1>TEXAS STORE</h1>
+    <h1>COVID STORE</h1>
     <p>اختر لعبتك</p>
     <div class="grid">
       <div class="card" onclick="selectGame('PUBG', this)">PUBG</div>
@@ -93,15 +95,19 @@ h2,h3 {font-size:1.6rem;}
     <button class="btn" onclick="nextStep()">التالي</button>
   </div>
 
-  <!-- Step 2: Payment Method -->
+  <!-- Step 2: Payment Method + Customer ID -->
   <div class="step" id="step2">
-    <h2>اختر طريقة الدفع</h2>
+    <h2>اختر طريقة الدفع وأدخل الايدي</h2>
     <div class="grid">
       <div class="card" onclick="selectPayment('بنكك', this)">بنكك</div>
       <div class="card" onclick="selectPayment('ماي كاشي', this)">ماي كاشي</div>
       <div class="card" onclick="selectPayment('فودافون', this)">فودافون</div>
     </div>
     <div id="paymentInfoContainer"></div>
+    <div style="margin-top:12px; text-align:right;">
+      <label for="customerID">أدخل الايدي:</label>
+      <input type="text" id="customerID" placeholder="مثال: 123456">
+    </div>
     <button class="btn" onclick="nextStep()">التالي</button>
   </div>
 
@@ -113,6 +119,7 @@ h2,h3 {font-size:1.6rem;}
       <p id="showOffer"></p>
       <p id="showPayment"></p>
       <p id="showAccount"></p>
+      <p id="showCustomerID"></p>
     </div>
     <button class="btn" onclick="sendWhatsApp()">تأكيد وإرسال</button>
   </div>
@@ -127,7 +134,7 @@ let selectedPayment = '';
 
 let paymentTexts = {
   "بنكك": {account:"رقم الحساب: 3212215"},
-  "ماي كاشي": {account: "رقم الحساب:904985  ،،،  الاسم: عبدالرحمن"},
+  "ماي كاشي": {account: "رقم الحساب: 904985<br>الاسم: عبدالرحمن"},
 };
 
 let offersData = {
@@ -160,11 +167,9 @@ function showStep(step){
 
 function selectGame(game, element){
   selectedGame = game;
-  // تظليل اللعبة المختارة
   document.querySelectorAll('#step1 .card').forEach(c=>c.classList.remove('selected'));
   element.classList.add('selected');
 
-  // عرض الباقات
   const container = document.getElementById('offersContainer');
   const list = document.getElementById('offersList');
   list.innerHTML = '';
@@ -184,7 +189,6 @@ function selectGame(game, element){
 
 function selectPayment(payment, element){
   selectedPayment = payment;
-  // تظليل طريقة الدفع
   document.querySelectorAll('#step2 .card').forEach(c=>c.classList.remove('selected'));
   element.classList.add('selected');
 
@@ -194,7 +198,6 @@ function selectPayment(payment, element){
 }
 
 function nextStep(){
-  // تحقق قبل الانتقال للخطوة 2
   if(currentStep === 1){
     if(!selectedGame){
       alert('الرجاء اختيار اللعبة أولاً');
@@ -206,24 +209,29 @@ function nextStep(){
     }
   }
 
-  // تحقق قبل الانتقال للخطوة 3
   if(currentStep === 2){
     if(!selectedPayment){
       alert('الرجاء اختيار طريقة الدفع أولاً');
       return;
     }
+    const customerID = document.getElementById('customerID').value.trim();
+    if(!customerID){
+      alert('الرجاء إدخال الايدي');
+      return;
+    }
   }
 
-  // الانتقال للخطوة التالية
   if(currentStep < 3){
     currentStep++;
     showStep(currentStep);
 
     if(currentStep===3){
+      const customerID = document.getElementById('customerID').value.trim();
       document.getElementById('showGame').textContent = `اللعبة المختارة: ${selectedGame}`;
       document.getElementById('showOffer').textContent = `العرض: ${selectedOffer.amount} ${selectedOffer.currency} — ${selectedPayment==='فودافون'?selectedOffer.priceEGP:selectedOffer.priceSDG} ${selectedPayment==='فودافون'?'ج.م':'ج.س'}`;
       document.getElementById('showPayment').textContent = `طريقة الدفع: ${selectedPayment}`;
       document.getElementById('showAccount').innerHTML = paymentTexts[selectedPayment]?.account || '';
+      document.getElementById('showCustomerID').textContent = `الايدي: ${customerID}`;
     }
   }
 }
@@ -233,12 +241,17 @@ function sendWhatsApp(){
     alert('الرجاء استكمال كل البيانات قبل الإرسال');
     return;
   }
+  const customerID = document.getElementById('customerID').value.trim();
+  if(!customerID){
+    alert('الرجاء إدخال الايدي');
+    return;
+  }
   let amount = selectedOffer.amount;
   let currency = selectedOffer.currency;
   let price = selectedPayment==='فودافون'?selectedOffer.priceEGP:selectedOffer.priceSDG;
-  let message = `اللعبة: ${selectedGame}%0Aالعرض: ${amount} ${currency} — ${price} ${selectedPayment==='فودافون'?'ج.م':'ج.س'}%0Aطريقة الدفع: ${selectedPayment}%0A${paymentTexts[selectedPayment].account}`;
+  let message = `اللعبة: ${selectedGame}%0Aالعرض: ${amount} ${currency} — ${price} ${selectedPayment==='فودافون'?'ج.م':'ج.س'}%0Aطريقة الدفع: ${selectedPayment}%0A${paymentTexts[selectedPayment].account}%0Aالايدي: ${customerID}`;
   
-  let phone = '+249116291311';
+  let phone = '+249916103363';
   let whatsappURL = `https://wa.me/${phone}?text=${message}`;
   window.open(whatsappURL,'_blank');
 }
