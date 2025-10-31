@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=1024"> 
-<title>COVID STORE — متجر شحن الألعاب</title>
+<title>TEXAS STORE — متجر شحن الألعاب</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 body {
@@ -82,7 +82,7 @@ label {font-size:1rem;}
 
   <!-- Step 1: Choose Game + Offers -->
   <div class="step active" id="step1">
-    <h1>COVID STORE</h1>
+    <h1>TEXAS STORE</h1>
     <p>اختر لعبتك</p>
     <div class="grid">
       <div class="card" onclick="selectGame('PUBG', this)">PUBG</div>
@@ -251,7 +251,7 @@ function sendWhatsApp(){
   let price = selectedPayment==='فودافون'?selectedOffer.priceEGP:selectedOffer.priceSDG;
   let message = `اللعبة: ${selectedGame}%0Aالعرض: ${amount} ${currency} — ${price} ${selectedPayment==='فودافون'?'ج.م':'ج.س'}%0Aطريقة الدفع: ${selectedPayment}%0A${paymentTexts[selectedPayment].account}%0Aالايدي: ${customerID}`;
   
-  let phone = '+249916103363';
+  let phone = '+249116291311';
   let whatsappURL = `https://wa.me/${phone}?text=${message}`;
   window.open(whatsappURL,'_blank');
 }
