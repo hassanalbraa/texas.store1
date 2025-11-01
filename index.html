@@ -97,7 +97,7 @@ label {font-size:1rem;}
 
   <!-- Step 2: Payment Method + Customer ID -->
   <div class="step" id="step2">
-    <h2>اختر طريقة الدفع وأدخل الايدي</h2>
+    <h2>اختر طريقة الدفع وأدخل الاي دي</h2>
     <div class="grid">
       <div class="card" onclick="selectPayment('بنكك', this)">بنكك</div>
       <div class="card" onclick="selectPayment('ماي كاشي', this)">ماي كاشي</div>
@@ -216,7 +216,7 @@ function nextStep(){
     }
     const customerID = document.getElementById('customerID').value.trim();
     if(!customerID){
-      alert('الرجاء إدخال الايدي');
+      alert('الرجاء إدخال الاي دي');
       return;
     }
   }
